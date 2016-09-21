@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>
+        Hello, {{name}} {{password}}
+    </h1>
+    <form action="/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+
+    <form action="/delete-message" method="post">
+        <input type="text" placeholder="Delete a message by message number" name="delete">
+        <button type="submit">Delete Message</button>
+    </form>
+
+    <form action="/edit-message" method="post">
+        <input type="text" placeholder="Edit a message by entering the message number" name="edit-message-num">
+        <input type="text" placeholder="Enter the edited text" name="edit-message-text">
+        <button type="submit">Edit Message</button>
+    </form>
+
+    <form action="/create-message" method="post">
+        <input type="text" placeholder="please enter your message" name="message">
+        <button type="submit">Submit</button>
+    </form>
+    <h3>
+        Messages:
+    </h3>
+    <ol>
+        {{#messages}}
+        <li>{{.}}</li>
+        {{/messages}}
+    </ol>
+</body>
+</html>
