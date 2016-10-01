@@ -3,7 +3,6 @@ import spark.Session;
 import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -19,7 +18,6 @@ public class Main {
         Spark.staticFileLocation("/public");
         Spark.init();
 
-        //three parameters: path, route, response transformer
         Spark.get("/",
                 ((request, response) -> {
 
@@ -51,7 +49,7 @@ public class Main {
                         user = new User(name, password);
                         users.put(name, user);
                     }
-                    
+
                     if(!user.checkPassword(password)){
                         response.redirect("/");
                         return "";
@@ -75,11 +73,9 @@ public class Main {
 
         Spark.post("/delete-message", ((request, response) -> {
 
-            //index of message
-            int delete = Integer.parseInt(request.queryParams("delete"));
+            int messageIndex = Integer.parseInt(request.queryParams("delete"));
 
-            //need to get message index from array list
-            user.messageList.remove(delete - 1);
+            user.messageList.remove(messageIndex - 1);
             response.redirect("/");
             return "";
         }));
@@ -88,8 +84,6 @@ public class Main {
             int editNumber = Integer.parseInt(request.queryParams("edit-message-num"));
             String editedText = request.queryParams("edit-message-text");
             Message m = new Message(editedText);
-            //user.messageList.remove(editNumber - 1);
-            //user.messageList.add(editNumber - 1, m);
             user.messageList.set(editNumber-1,m);
 
             response.redirect("/");
