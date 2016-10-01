@@ -11,35 +11,27 @@ import java.util.HashMap;
  */
 public class Main {
     static User user;
-    //static String pword;
 
     static HashMap<String, User> users = new HashMap<>();
 
     public static void main(String[] args) {
 
-        //Spark.staticFileLocation("/public");
+        Spark.staticFileLocation("/public");
         Spark.init();
 
         //three parameters: path, route, response transformer
         Spark.get("/",
                 ((request, response) -> {
 
-                 Session session = request.session();
+                    Session session = request.session();
                     String name = session.attribute("userName");
-                    String pword=session.attribute("password");
-
 
                     User user = users.get(name);
 
                     HashMap h = new HashMap();
-                    if (user == null){
+                    if (user == null) {
                         return new ModelAndView(h, "index.html");
-                    }
-                    else if(!user.checkPassword(name,pword)){
-                        System.out.println("password error");
-                        return new ModelAndView(h, "index.html");
-                    }
-                    else {
+                    } else {
                         h.put("name", user.name);
                         h.put("password", user.password);
                         h.put("messages", user.messageList);
@@ -52,18 +44,21 @@ public class Main {
         Spark.post("/create-user",
                 ((request, response) -> {
                     String name = request.queryParams("name");
-                    String pword = request.queryParams("password");
+                    String password = request.queryParams("password");
 
                     user = users.get(name);
                     if (user == null) {
-                        user = new User(name, pword);
-                        users.put(name,user);
+                        user = new User(name, password);
+                        users.put(name, user);
+                    }
+                    
+                    if(!user.checkPassword(password)){
+                        response.redirect("/");
+                        return "";
                     }
 
-                    //these are cookies
                     Session session = request.session();
                     session.attribute("userName", user.name);
-                    session.attribute("password", pword);
 
                     response.redirect("/");
                     return "";
@@ -78,23 +73,24 @@ public class Main {
                     return "";
                 });//post
 
-        Spark.post("/delete-message",((request, response) -> {
+        Spark.post("/delete-message", ((request, response) -> {
 
             //index of message
-            int delete=Integer.parseInt(request.queryParams("delete"));
+            int delete = Integer.parseInt(request.queryParams("delete"));
 
             //need to get message index from array list
-            user.messageList.remove(delete-1);
+            user.messageList.remove(delete - 1);
             response.redirect("/");
-        return "";
+            return "";
         }));
 
         Spark.post("/edit-message", ((request, response) -> {
-            int editNumber=Integer.parseInt(request.queryParams("edit-message-num"));
-            String editedText=request.queryParams("edit-message-text");
+            int editNumber = Integer.parseInt(request.queryParams("edit-message-num"));
+            String editedText = request.queryParams("edit-message-text");
             Message m = new Message(editedText);
-            user.messageList.remove(editNumber-1);
-            user.messageList.add(editNumber-1,m);
+            //user.messageList.remove(editNumber - 1);
+            //user.messageList.add(editNumber - 1, m);
+            user.messageList.set(editNumber-1,m);
 
             response.redirect("/");
             return "";
@@ -102,7 +98,7 @@ public class Main {
 
         Spark.post("/logout", ((request, response) -> {
 
-                    Session session=request.session();
+                    Session session = request.session();
                     session.invalidate();
                     response.redirect("/");
                     return "";

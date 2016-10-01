@@ -6,11 +6,17 @@
 </head>
 <body>
     <h1>
-        Hello, {{name}} {{password}}
+        Hello, {{name}}
     </h1>
+    <h3>
+        ...We've been expecting you
+    </h3>
+
+    {{#name}}
     <form action="/logout" method="post">
         <button type="submit">Logout</button>
     </form>
+    {{/name}}
 
     <form action="/delete-message" method="post">
         <input type="text" placeholder="Delete a message by message number" name="delete">

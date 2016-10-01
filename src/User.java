@@ -5,18 +5,18 @@ import java.util.HashMap;
  * Created by joe on 21/09/2016.
  */
 public class User {
-    //store user information
+
 
     String name;
     String password;
 
     ArrayList<Message> messageList = new ArrayList<>();
 
-    public User(String name, String pword) {
+    public User(String name, String password) {
         this.name = name;
-        this.password=pword;
+        this.password=password;
     }
 
-    public boolean checkPassword(String name, String pword){return pword.equals(password);}
+    public boolean checkPassword(String pwd){return password.equals(pwd);}
 
 }
